@@ -1,9 +1,8 @@
-from network.ServerGraph.serverGraph import ServerGraph
-from network.flow.path import Path
-from network.link.link import Link
-from network.network import Network
-from network.server.server import Server
-
+from modelling.network.flow.path import Path
+from modelling.network.link.link import Link
+from modelling.network.network import Network
+from modelling.network.server.server import Server
+from modelling.network.ServerGraph.server_graph import ServerGraph
 
 class NetworkGraph(Network):
 
