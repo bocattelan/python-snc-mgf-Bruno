@@ -29,7 +29,7 @@ class Path(object):
     @property
     def sink(self) -> Server:
         if len(self.servers) != 0:
-            return self.servers[len(self.servers)]
+            return self.servers[len(self.servers)-1]
         else:
             raise PathError(self, "Path is empty")
 
