@@ -9,29 +9,44 @@ from modelling.network.server.server import Server
 
 
 class Flow(object):
-    alias: String
-    arrival: Arrival
-    path: Path
 
     def __init__(self, alias: String, arrival: Arrival, path: Path):
-        self.alias = alias
-        self.arrival = arrival
-        self.path = path
+        self.__alias = alias
+        self.__arrival = arrival
+        self.__path = path
 
-    def get_servers(self) -> List[Server]:
-        return self.path.get_servers()
+    @property
+    def alias(self) -> String:
+        return self.__alias
 
-    def get_links(self) -> List[Link]:
-        return self.path.get_links()
+    @property
+    def arrival(self) -> Arrival:
+        return self.__arrival
 
-    def get_source(self):
+    @property
+    def servers(self) -> List[Server]:
+        return self.__path.servers
+
+    @property
+    def links(self) -> List[Link]:
+        return self.__path.links
+
+    @property
+    def source(self) -> Server:
         try:
-            return self.path.get_source()
+            return self.__path.source
+        except PathError as error:
+            raise FlowError(self, error.message)
+
+    @property
+    def sink(self) -> Server:
+        try:
+            return self.__path.sink
         except PathError as error:
             raise FlowError(self, error.message)
 
     def __str__(self):
-        return "[" + self.alias + ": " + self.arrival.__str__() + "; " + self.path.__str__() + "]"
+        return "[" + self.alias + ": " + self.__arrival.__str__() + "; " + self.__path.__str__() + "]"
 
     def __repr__(self):
-        return "[" + self.alias + ": " + self.arrival.__repr__() + "; " + self.path.__repr__() + "]"
+        return "[" + self.alias + ": " + self.__arrival.__repr__() + "; " + self.__path.__repr__() + "]"

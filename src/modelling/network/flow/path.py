@@ -6,33 +6,35 @@ from modelling.network.server.server import Server
 
 
 class Path(object):
-    servers: List[Server]
-    links: List[Link]
 
     def __init__(self, servers: List[Server], links: List[Link]):
-        self.servers = servers
-        self.links = links
+        self.__servers = servers
+        self.__links = links
 
-    def get_servers(self) -> List[Server]:
-        return self.servers
+    @property
+    def servers(self) -> List[Server]:
+        return self.__servers
 
-    def get_links(self) -> List[Link]:
-        return self.links
+    @property
+    def links(self) -> List[Link]:
+        return self.__links
 
-    def get_source(self):
+    @property
+    def source(self) -> Server:
         if len(self.servers) != 0:
             return self.servers[0]
         else:
             raise PathError(self, "Path is empty")
 
-    def get_sink(self):
+    @property
+    def sink(self) -> Server:
         if len(self.servers) != 0:
             return self.servers[len(self.servers)]
         else:
             raise PathError(self, "Path is empty")
 
     def __str__(self):
-        return "[path from: " + self.get_source().__str__() + " to " + self.get_sink().__str__() + "]"
+        return "[path from: " + self.source.__str__() + " to " + self.sink.__str__() + "]"
 
     def __repr__(self):
         return "[" + ','.join(s.__str__() for s in self.servers) + "]"

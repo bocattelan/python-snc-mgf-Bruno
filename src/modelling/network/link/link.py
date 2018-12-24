@@ -2,18 +2,18 @@ from modelling.network.server.server import Server
 
 
 class Link(object):
-    src: Server
-    dst: Server
 
     def __init__(self, src: Server, dst: Server):
-        self.src = src
-        self.dst = dst
+        self.__src = src
+        self.__dst = dst
 
-    def get_src(self):
-        return self.src
+    @property
+    def src(self) -> Server:
+        return self.__src
 
-    def get_dst(self):
-        return self.dst
+    @property
+    def dst(self) -> Server:
+        return self.__dst
 
     def __str__(self):
-        return "[link:" + self.src.alias + ", " + self.dst.alias + "]"
+        return "[link:" + self.__src.alias + ", " + self.__dst.alias + "]"

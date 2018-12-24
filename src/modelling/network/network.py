@@ -12,22 +12,12 @@ from modelling.network.server.server import Server
 
 
 class Network(ABC):
-    servers: Set[Server]
-    links: Set[Link]
-    flows: Set[Flow]
-
-    flows_per_server: Dict[Server, Set[Flow]]
-    flows_per_links = Dict[Link, Set[Flow]]
-
-    links_src: Dict[Server, Set[Link]]
-    links_dst: Dict[Server, Set[Link]]
-
-    source_flows: Dict[Server, Set[Flow]]
 
     def __init__(self):
         self.servers = set()
         self.flows = set()
         self.flows_per_server = dict()
+        self.flows_per_link = dict()
         self.links_src = dict()
         self.links_dst = dict()
         self.source_flows = dict()
@@ -44,23 +34,23 @@ class Network(ABC):
         return self.flows
 
     def update_maps(self, flow: Flow):
-        for server in flow.get_servers():
+        for server in flow.servers:
             if not (self.flows_per_server.__contains__(server)):
                 self.flows_per_server[server] = set()
             self.flows_per_server[server].add(flow)
 
-        for link in flow.get_links():
-            if not (self.flows_per_links.__contains__(link)):
-                self.flows_per_links[link] = set()
-            self.flows_per_links[link].add(flow)
+        for link in flow.links:
+            if not (self.flows_per_link.__contains__(link)):
+                self.flows_per_link[link] = set()
+            self.flows_per_link[link].add(flow)
 
-            if not (self.links_src.__contains__(link.get_src())):
-                self.links_src[link.get_src()] = set()
-            self.links_src[link.get_src()].add(link)
+            if not (self.links_src.__contains__(link.src)):
+                self.links_src[link.src] = set()
+            self.links_src[link.src].add(link)
 
-            if not (self.links_dst.__contains__(link.get_dst())):
-                self.links_dst[link.get_dst()] = set()
-            self.links_dst[link.get_dst()].add(link)
+            if not (self.links_dst.__contains__(link.dst)):
+                self.links_dst[link.dst] = set()
+            self.links_dst[link.dst].add(link)
         pass
 
     def find_link(self, src: Server, dst: Server) -> Link:
@@ -69,7 +59,7 @@ class Network(ABC):
                 return link
         raise LinkError(src, dst, "No link found")
 
-    def create_path(self, servers: List[Server]) -> Path:
+    def __create_path(self, servers: List[Server]) -> Path:
         links = list()
         for i in range(len(servers) - 1):
             links.append(self.find_link(servers[i], servers[i + 1]))
@@ -77,13 +67,13 @@ class Network(ABC):
 
     def add_flow(self, alias: String, arrival: Arrival, servers: List[Server]) -> Flow:
         try:
-            flow = Flow(alias, arrival, self.create_path(servers))
+            flow = Flow(alias, arrival, self.__create_path(servers))
         except LinkError as error:
             raise FlowCreationError(error.message + " from" + error.src + " to " + error.dst)
 
-        if not (self.source_flows.__contains__(flow.get_source())):
-            self.source_flows[flow.get_source()] = set()
-        self.source_flows[flow.get_source()].add(flow)
+        if not (self.source_flows.__contains__(flow.source)):
+            self.source_flows[flow.source] = set()
+        self.source_flows[flow.source].add(flow)
         self.update_maps(flow)
         self.flows.add(flow)
         return flow
