@@ -9,8 +9,8 @@ class ServerGraph(Network):
     def __init__(self):
         super().__init__()
 
-    def find_shortest_path(self) -> Path:
+    def find_shortest_path(self, src: Server, dst: Server) -> Path:
         pass
 
-    def add_link(self, src: Server, dst: Server) -> Link:
-        return super().add_link(src, dst)
+    def add_link(self, src: Server, dst: Server, service=None) -> Link:
+        return super().add_link(src, dst, None)
