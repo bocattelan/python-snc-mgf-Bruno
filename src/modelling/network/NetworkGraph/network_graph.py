@@ -12,9 +12,10 @@ from utils.values import Values
 
 class NetworkGraph(Network):
 
+    # code from: http://www.rosettacode.org/wiki/Dijkstra%27s_algorithm#Python
     def find_shortest_path(self, src: Server, dst: Server) -> List[Server]:
         dist = {vertex: Values.POSITIVE_INFINITY for vertex in self.servers}
-        previous = {vertex: None for vertex in self.previous_servers(dst)}
+        previous = {vertex: None for vertex in self.servers}
         dist[src] = 0
         q = self.servers.copy()
         neighbours = {vertex: set() for vertex in self.servers}
@@ -25,7 +26,7 @@ class NetworkGraph(Network):
         while q:
             u = min(q, key=lambda vertex: dist[vertex])
             q.remove(u)
-            if dist[u] == Values.NEGATIVE_INFINITY or u == dst:
+            if dist[u] == Values.POSITIVE_INFINITY or u == dst:
                 break
             for v, cost in neighbours[u]:
                 alt = dist[u] + cost

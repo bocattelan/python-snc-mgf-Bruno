@@ -24,11 +24,12 @@ class networkGraphCreation(unittest.TestCase):
         s1 = network_graph.add_server("s1", self.service)
         l1 = network_graph.add_link(s0, s1, self.service)
         f0 = network_graph.add_flow("f0", self.arrival, network_graph.find_shortest_path(s0, s1))
+        f1 = network_graph.add_flow("f1", self.arrival, [s1])
 
-        self.assertEqual(network_graph.servers, {s0, s1})
-        self.assertEqual(network_graph.flows, {f0})
-        self.assertEqual(f0.servers, [s0, s1])
-        self.assertEqual(len(network_graph.links), 2)
+        self.assertEqual({s0, s1}, network_graph.servers)
+        self.assertEqual({f0, f1}, network_graph.flows)
+        self.assertEqual([s0, s1], f0.servers)
+        self.assertEqual(2, len(network_graph.links))
 
         network_graph.remove_flow(f0)
-        self.assertEqual(network_graph.flows, set())
+        self.assertEqual({f1}, network_graph.flows)

@@ -127,7 +127,7 @@ class Network(ABC):
             succeeding_servers.add(link.dst)
         return succeeding_servers
 
-    def add_server(self, alias: String, service: Service) -> Server:
+    def add_server(self, alias: String, service=None) -> Server:
         server = Server(alias, service)
         self.__servers.add(server)
         return server
